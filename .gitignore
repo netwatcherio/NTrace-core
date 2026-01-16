@@ -172,3 +172,4 @@ NTrace-core
 
 .gocache
 .gomodcache
+/agent/lib/NTrace-core/
