@@ -35,7 +35,8 @@ func (s *ICMPSpec) InitICMP() {
 		if util.EnvDevMode {
 			panic(fmt.Errorf("(InitICMP) ListenPacket(%s, %s) failed: %v", network, s.SrcIP, err))
 		}
-		log.Fatalf("(InitICMP) ListenPacket(%s, %s) failed: %v", network, s.SrcIP, err)
+		log.Printf("(InitICMP) ListenPacket(%s, %s) failed: %v", network, s.SrcIP, err)
+		return // Don't crash, just fail this traceroute gracefully
 	}
 	s.icmp = icmpConn
 
