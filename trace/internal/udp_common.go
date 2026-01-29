@@ -36,6 +36,15 @@ func (s *UDPSpec) InitICMP() {
 }
 
 func (s *UDPSpec) listenICMPSock(ctx context.Context, ready chan struct{}, onICMP func(msg ReceivedMessage, finish time.Time, data []byte)) {
+	// Check if ICMP initialization failed (e.g., bind error in NAT/VM environments)
+	if s.icmp == nil {
+		log.Printf("(UDPSpec.listenICMPSock) ICMP not initialized for %s, skipping listener", s.SrcIP)
+		close(ready)
+		// Wait for context cancellation to avoid goroutine leak
+		<-ctx.Done()
+		return
+	}
+
 	lc := NewPacketListener(s.icmp)
 	go lc.Start(ctx)
 	close(ready)
